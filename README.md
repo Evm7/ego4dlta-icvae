@@ -11,6 +11,21 @@ This work ranked first in the EGO4D LTA Challenge!
 - [25.07.2022] We release the first version of the ICVAE codebase.
 - [26.07.2022] We release the arXiv paper.
 
+## 📝 Preparation
+### Install dependencies 
+```bash
+conda create -n icvae python=3.8
+source activate icvae
+cd [Path_To_This_Code]
+pip install -r requirements.txt
+mkdir outputs
+```
+
+### Ego4D videos and metadata
+- Follow the procedure indicated in [EGO4D main page](https://ego4d-data.org/docs/data/features) on how to download the pre-extracted visual features from Slowfast 8x8 R101 pretrained in Kinetics400.
+- Download all the annotations for FHO_LTA challenge (train,test, and validation) and add them into the annotations directory (together with json files preprocessed by us)/
+
+
 ## 🏋️‍️ Pretraining
 This section is still under development. In the next days we will publish more information on how to test/train the project.
 
