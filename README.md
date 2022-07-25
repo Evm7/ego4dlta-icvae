@@ -4,7 +4,7 @@
 This work ranked first in the EGO4D LTA Challenge!
 
 
-<img src="/figures/overall_architecture.png" alt="ICVAE" style="zoom:55%;" />
+<img src="/figures/overall_architecture.png" alt="ICVAE" style="zoom:45%;" />
 
 ## 📢 News
 - [14.06.2022] Our ICVAE won [**1st place** in LTA](https://eval.ai/web/challenges/challenge-page/1598/overview)
