@@ -1,0 +1,72 @@
+TRAIN:
+  ENABLE: True
+  DATASET: Ego4dLongTermAnticipation_Features
+  BATCH_SIZE: 64 #512 # 128
+TEST:
+  ENABLE: True
+  SPLIT: "test" # {"test", "val", "train"}
+  DATASET: Ego4dLongTermAnticipation_Features
+  BATCH_SIZE: 256 #32
+DATA_LOADER:
+  NUM_WORKERS: 8
+  PIN_MEMORY: True
+FORECASTING:
+  AGGREGATOR: ConcatAggregator #TransformerAggregator #ConcatAggregator
+  DECODER: MultiHeadDecoder
+  NUM_INPUT_CLIPS: 6
+  NUM_ACTIONS_TO_PREDICT: 20
+SOLVER:
+  BASE_LR: 1e-4 #4e-2
+  LR_POLICY: cosine_warmup
+  MAX_EPOCH: 30
+  MOMENTUM: 0.9
+  OPTIMIZING_METHOD: adam
+  WEIGHT_DECAY: 1e-2
+  WARMUP_FACTOR: 0.1
+  WARMUP_STEPS: 1000
+MODEL:
+  NUM_CLASSES: [[115,478], [52]]
+  ARCH: mlpmixer
+  MODEL_NAME: H3M
+  LOSS_FUNC: cross_entropy
+  DROPOUT_RATE: 0.5 #0.5
+  MULTI_INPUT_FEATURES: 768
+  lambdas:
+    cross_entropy: 1.0
+  losses:
+    - cross_entropy
+
+DATA:
+  PATH_PREFIX: [PATH_TO_CODE_BASE}/data/annotations/
+  CONFIG_FILE: [PATH_TO_CODE_BASE}/data/config/config_H3M.yaml
+  FEAT_PREFIX: [PATH_TO_DATASET}
+  FOLDER: [PATH_TO_CODE_BASE}/experiments
+  FEATURE_TYPE: "vision" # {"language", "onehot", "vision"}
+
+MLPMixer:
+  num_intentions: 52
+  feature_dimension: 2304
+  depth : 4
+  expansion_factor_token: 0.5
+  expansion_factor : 4
+  dropout_rate : 0.5
+  num_actions_classes : [115, 478]
+  noise_injection_mean: 0.0
+  noise_injection_std: 0.3
+  noise_injection_factor : 1e-2
+  beta: 0.9
+  imbalanced : False
+  double_mixer: True
+  action_loss : True
+  augmentation: False
+  num_features: 14
+  position_encoder: False
+  weight_loss_intention: 2
+  weight_loss_action: 1
+
+
+
+NUM_GPUS: 1
+NUM_SHARDS: 2
+RNG_SEED: 0
+OUTPUT_DIR: .

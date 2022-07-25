@@ -1,0 +1,82 @@
+TRAIN:
+  ENABLE: True
+  DATASET: Ego4dLongTermAnticipation_Features
+  BATCH_SIZE: 64 #512 # 128
+TEST:
+  ENABLE: True
+  SPLIT: "val" # {"test", "val", "train"}
+  DATASET: Ego4dLongTermAnticipation_Features
+  BATCH_SIZE: 32 #32
+
+DATA_LOADER:
+  NUM_WORKERS: 8
+  PIN_MEMORY: True
+FORECASTING:
+  AGGREGATOR: ConcatAggregator #TransformerAggregator #ConcatAggregator
+  DECODER: MultiHeadDecoder
+  NUM_INPUT_CLIPS: 8
+  NUM_ACTIONS_TO_PREDICT: 20
+SOLVER:
+  BASE_LR: 1e-4 #4e-2
+  LR_POLICY: cosine_warmup
+  MAX_EPOCH: 150
+  MOMENTUM: 0.9
+  OPTIMIZING_METHOD: adam
+  WEIGHT_DECAY: 1e-4
+  WARMUP_FACTOR: 0.1
+  WARMUP_STEPS: 1000
+MODEL:
+  NUM_CLASSES: [115, 478]
+  ARCH: cvae
+  MODEL_NAME: ICVAE
+  LOSS_FUNC: cross_entropy
+  DROPOUT_RATE: 0.5 #0.5
+  MULTI_INPUT_FEATURES: 768
+  lambdas:
+    cross_entropy: 5.0e-3
+    l2: 1.0
+    kl: 1.0e-05
+  losses:
+    - cross_entropy
+    - l2
+    - kl
+
+DATA:
+  PATH_PREFIX: [PATH_TO_CODE_BASE}/data/annotations/
+  CONFIG_FILE: [PATH_TO_CODE_BASE}/data/config/config_H3M.yaml
+  FEAT_PREFIX: [PATH_TO_DATASET}
+  FOLDER: [PATH_TO_CODE_BASE}/experiments
+  FEATURE_TYPE: "onehot" # {"language", "onehot", "vision"} always mantain onehot in cvae, as embedding layer is the one that obtains the representation directly
+
+
+CVAE:
+  separate_nouns_verbs : True #True
+  heads_per_future: False # True implies num_action_to_predict heads, while False imply just 1. Each had has 2 FC (Noun - verb)
+  conditions_decoder : "input_as_data" # for Transf1 "input_as_memory", for Transf2 "input_as_data"
+  pair_embedding: False
+  shared_embedding: True
+  latent_dim: 512 #512 #512 #1024 #256
+  activation: gelu
+  archiname: transformer
+  modelname: cvae_transformer_rc_rcxyz_kl
+  modeltype: cvae
+  nfeats: 14
+  num_actions_to_predict: 20
+  num_input_clips: 8
+  num_intentions: 52
+  num_layers: 4
+  num_nouns: 478
+  num_verbs: 115
+  sampling: conseq
+  topK: 5
+  semantic_dim: 512
+  weighted_loss: False
+  use_reconstruction: True
+  add_noisy_labels: False
+  featuretype: "language"
+  use_intention: True
+
+NUM_GPUS: 1
+NUM_SHARDS: 2
+RNG_SEED: 0
+OUTPUT_DIR: .
