@@ -24,6 +24,7 @@ mkdir outputs
 ### Ego4D videos and metadata
 - Follow the procedure indicated in [EGO4D main page](https://ego4d-data.org/docs/data/features) on how to download the pre-extracted visual features from Slowfast 8x8 R101 pretrained in Kinetics400.
 - Download all the annotations for FHO_LTA challenge (train,test, and validation) and add them into the annotations directory (together with json files preprocessed by us)/
+- Modify config.yaml file and paths.py from data directory by adding the path information to this code ([PATH_TO_CODE_BASE]) and to the feature dataset downloaded from Ego4d and padded ([PATH_TO_DATASET])
 
 
 ## 🏋️‍️ Pretraining
