@@ -1,5 +1,5 @@
 #  Intention-Conditioned Long-Term Human Egocentric Action Forecasting @ EGO4D Challenge 2022
-[Arxiv2022]  Intention-Conditioned Long-Term Human Egocentric Action Forecasting : @EGO4D LTA Challenge 2022
+[Arxiv2022]  [Intention-Conditioned Long-Term Human Egocentric Action Forecasting : @EGO4D LTA Challenge 2022](https://arxiv.org/abs/2207.12080)
 
 This work ranked first in the EGO4D LTA Challenge!
 
