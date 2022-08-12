@@ -34,6 +34,16 @@ This section is still under development. In the next days we will publish more i
 
 If you find our work helps, please cite our paper.
 
+@misc{https://doi.org/10.48550/arxiv.2207.12080,
+  doi = {10.48550/ARXIV.2207.12080},
+  url = {https://arxiv.org/abs/2207.12080},
+  author = {Mascaro, Esteve Valls and Ahn, Hyemin and Lee, Dongheui},
+  title = {Intention-Conditioned Long-Term Human Egocentric Action Forecasting @ EGO4D Challenge 2022},
+  publisher = {arXiv},
+  year = {2022},
+  copyright = {Creative Commons Attribution 4.0 International}
+}
+
 ## ✉️ Contact
 
 This repo is maintained by [Esteve](https://github.com/Evm7).
