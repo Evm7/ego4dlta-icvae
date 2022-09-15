@@ -28,6 +28,7 @@ mkdir outputs
 ```
 - Download all the annotations for FHO_LTA challenge (train,test, and validation) and add them into the annotations directory (together with json files preprocessed by us)/
 - Modify config.yaml file and paths.py from data directory by adding the path information to this code ([PATH_TO_CODE_BASE]) and to the feature dataset downloaded from Ego4d and padded ([PATH_TO_DATASET])
+- Pre-process the features dataset by using the preprocess_dataset.py script. Adapt the default paths to your enviroment.
 
 
 ## 🏋️‍️ Pretraining
