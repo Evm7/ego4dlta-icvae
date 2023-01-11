@@ -35,7 +35,7 @@ class ActionHead(nn.Module):
 
     def forward(self, x):
         # Perform dropout.
-        x = self.avg_pool(x).squeeze()
+        x = self.avg_pool(x).squeeze(1)
         feat = x
         if hasattr(self, "dropout"):
             feat = self.dropout(feat)
