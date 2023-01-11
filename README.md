@@ -51,7 +51,13 @@ Consists on the sequential use of the H3M module to classify the video features 
 Please adapt the versions setted in the file to obtain the best results.
 
 ### Configuration
-Configuration to obtain the best results can be found in our paper.
+Configuration to obtain the best results can be obtained from the hparams. You need to define the hparams as in the files for the modules used.
+Several attributes should be changed from the files to adapt to your environment:
+(CHECKPOINT_FILE_PATH, CONFIG_FILE, FEAT_PREFIX, FOLDER, PATH_PREFIX, annotation_path, OUTPUTS_PATH)
+Configuration files:
+- hparams_h3m.yaml
+- hparams_icvae.yaml
+- hparams_intention.yaml
 
 ## 🎓 Citation
 
