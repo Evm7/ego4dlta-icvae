@@ -123,54 +123,85 @@ class H3M(nn.Module):
         self.params["device"] = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         self.mixer = cfg.MLPMixer.double_mixer
         self.classify_classes = cfg.MLPMixer.action_loss
-        if self.mixer:
-            self.action_mixer = MLPMixer(num_features=cfg.MLPMixer.num_features,
+        self.multitask_head_bool = cfg.MLPMixer.multitask_head
+        self.only_recognition = cfg.TRAIN.DATASET == "Ego4dRecognition_Features"
+        self.h3m_used = cfg.MLPMixer.h3m_used
+
+
+        if self.multitask_head_bool:
+            self.multitask_head = ActionHead(
+                            dim_in=[ cfg.MultiHead.input_dimension],
+                            num_classes= cfg.MODEL.NUM_CLASSES[0],
+                            dropout_rate=cfg.MODEL.DROPOUT_RATE,
+                            act_func="softmax",
+                            test_noact=False)
+        if not self.only_recognition and self.h3m_used:
+            if self.mixer:
+                self.action_mixer = MLPMixer(num_features=cfg.MLPMixer.num_features,
+                                          feature_dimension=cfg.MLPMixer.feature_dimension,
+                                          depth= cfg.MLPMixer.depth,
+                                          num_classes = cfg.MLPMixer.num_actions_classes,
+                                          expansion_factor=cfg.MLPMixer.expansion_factor,
+                                          expansion_factor_token = cfg.MLPMixer.expansion_factor_token,
+                                          dropout=cfg.MODEL.DROPOUT_RATE,
+                                          reduce_to_class=self.classify_classes,
+                                          action_loss=self.classify_classes,
+                                            position_encoder = cfg.MLPMixer.position_encoder,
+                                             test_noact=from_preparator
+                                          )
+            else:
+                self.action_mixer = nn.AdaptiveAvgPool2d((1, cfg.MLPMixer.feature_dimension))
+
+
+            self.intention_mixer = MLPMixer(num_features=cfg.FORECASTING.NUM_INPUT_CLIPS,
                                       feature_dimension=cfg.MLPMixer.feature_dimension,
-                                      depth= cfg.MLPMixer.depth,
-                                      num_classes = cfg.MLPMixer.num_actions_classes,
+                                      depth=cfg.MLPMixer.depth,
+                                      num_classes = cfg.MLPMixer.num_intentions,
                                       expansion_factor=cfg.MLPMixer.expansion_factor,
                                       expansion_factor_token = cfg.MLPMixer.expansion_factor_token,
                                       dropout=cfg.MODEL.DROPOUT_RATE,
-                                      reduce_to_class=self.classify_classes,
-                                      action_loss=self.classify_classes,
-                                        position_encoder = cfg.MLPMixer.position_encoder,
-                                         test_noact=from_preparator
+                                      reduce_to_class=True,
+                                        position_encoder = cfg.MLPMixer.position_encoder
                                       )
-        else:
-            self.action_mixer = nn.AdaptiveAvgPool2d((1, cfg.MLPMixer.feature_dimension))
-
-
-        self.intention_mixer = MLPMixer(num_features=cfg.FORECASTING.NUM_INPUT_CLIPS,
-                                  feature_dimension=cfg.MLPMixer.feature_dimension,
-                                  depth=cfg.MLPMixer.depth,
-                                  num_classes = cfg.MLPMixer.num_intentions,
-                                  expansion_factor=cfg.MLPMixer.expansion_factor,
-                                  expansion_factor_token = cfg.MLPMixer.expansion_factor_token,
-                                  dropout=cfg.MODEL.DROPOUT_RATE,
-                                  reduce_to_class=True,
-                                    position_encoder = cfg.MLPMixer.position_encoder
-                                  )
 
     def forward(self, x):
-        B, N, S, D = x.shape
-        if self.mixer and self.classify_classes:
-            action_embed, nouns_classes, verbs_classes = [], [], []
-            for i in range(N):
-                (v, n), action_emb = self.action_mixer(x[:,i, : ,:]) # y is [verb, noun]
-                action_embed.append(action_emb)
-                nouns_classes.append(n)
-                verbs_classes.append(v)
-            action_embed = torch.stack(action_embed, axis=1)
-            nouns_classes = torch.stack(nouns_classes).permute(1,0,2)
-            verbs_classes = torch.stack(verbs_classes).permute(1,0,2)
-            return self.intention_mixer(action_embed), [verbs_classes, nouns_classes]
-
-        elif self.mixer:
-            action_embed = torch.stack([self.action_mixer(x[:,i, : ,:]) for i in range(N)], axis=1)
+        if self.only_recognition: # Using Ego4DRecognitionDataset
+            # B, S, D = x.shape
+            v, n = self.multitask_head(x[:, :, :])
+            return [v, n]
         else:
-            action_embed = torch.stack([self.action_mixer(x[:,i, : ,:]).squeeze() for i in range(N)], axis=1)
+            B, N, S, D = x.shape
+            nouns_classes, verbs_classes = [], []
 
-        return self.intention_mixer(action_embed)
+            if not self.h3m_used:
+                for i in range(N):
+                    v, n = self.multitask_head(x[:, i, :, :])
+                    verbs_classes.append(v)
+                    nouns_classes.append(n)
+                verbs_classes = torch.stack(verbs_classes).permute(1, 0, 2)
+                nouns_classes = torch.stack(nouns_classes).permute(1, 0, 2)
+                return [verbs_classes, nouns_classes]
+            else:
+                if self.mixer and self.classify_classes:
+                    action_embed = []
+                    for i in range(N):
+                        (v, n), action_emb = self.action_mixer(x[:,i, : ,:]) # y is [verb, noun]
+                        action_embed.append(action_emb)
+                        if self.multitask_head_bool: # Only used to classify the classes, but does not effect to the embedding obtained
+                            v, n = self.multitask_head(x[:,i, : ,:])
+                        nouns_classes.append(n)
+                        verbs_classes.append(v)
+                    action_embed = torch.stack(action_embed, axis=1)
+                    nouns_classes = torch.stack(nouns_classes).permute(1,0,2)
+                    verbs_classes = torch.stack(verbs_classes).permute(1,0,2)
+                    return self.intention_mixer(action_embed), [verbs_classes, nouns_classes]
+
+                elif self.mixer:
+                    action_embed = torch.stack([self.action_mixer(x[:,i, : ,:]) for i in range(N)], axis=1)
+                else:
+                    action_embed = torch.stack([self.action_mixer(x[:,i, : ,:]).squeeze() for i in range(N)], axis=1)
+
+            return self.intention_mixer(action_embed)
 
 
 ######
