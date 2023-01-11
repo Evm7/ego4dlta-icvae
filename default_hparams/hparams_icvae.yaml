@@ -1,0 +1,555 @@
+cfg: !!python/object/new:fvcore.common.config.CfgNode
+  dictitems:
+    AVA: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        ANNOTATION_DIR: /mnt/vol/gfsai-flash3-east/ai-group/users/haoqifan/ava/frame_list/
+        BGR: false
+        DETECTION_SCORE_THRESH: 0.9
+        EXCLUSION_FILE: ava_val_excluded_timestamps_v2.2.csv
+        FRAME_DIR: /mnt/fair-flash3-east/ava_trainval_frames.img/
+        FRAME_LIST_DIR: /mnt/vol/gfsai-flash3-east/ai-group/users/haoqifan/ava/frame_list/
+        FULL_TEST_ON_VAL: false
+        GROUNDTRUTH_FILE: ava_val_v2.2.csv
+        IMG_PROC_BACKEND: cv2
+        LABEL_MAP_FILE: ava_action_list_v2.2_for_activitynet_2019.pbtxt
+        TEST_FORCE_FLIP: false
+        TEST_LISTS:
+        - val.csv
+        TEST_PREDICT_BOX_LISTS:
+        - ava_val_predicted_boxes.csv
+        TRAIN_GT_BOX_LISTS:
+        - ava_train_v2.2.csv
+        TRAIN_LISTS:
+        - train.csv
+        TRAIN_PCA_EIGVAL:
+        - 0.225
+        - 0.224
+        - 0.229
+        TRAIN_PCA_EIGVEC:
+        - - -0.5675
+          - 0.7192
+          - 0.4009
+        - - -0.5808
+          - -0.0045
+          - -0.814
+        - - -0.5836
+          - -0.6948
+          - 0.4203
+        TRAIN_PCA_JITTER_ONLY: true
+        TRAIN_PREDICT_BOX_LISTS: []
+        TRAIN_USE_COLOR_AUGMENTATION: false
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    BN: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        EPSILON: 1.0e-05
+        MOMENTUM: 0.1
+        NORM_TYPE: batchnorm
+        NUM_BATCHES_PRECISE: 200
+        NUM_SPLITS: 1
+        NUM_SYNC_DEVICES: 1
+        USE_PRECISE_STATS: false
+        WEIGHT_DECAY: 0.0
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    CHECKPOINT_FILE_PATH: ''
+    CHECKPOINT_LOAD_MODEL_HEAD: false
+    CHECKPOINT_VERSION: ''
+    CVAE: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        activation: gelu
+        add_noisy_labels: false
+        annotation_path: data/annotations/
+        archiname: transformer
+        conditions_decoder: input_as_data
+        config_file: /data/config/config_forecasting.yaml
+        feature_path: Ego4D/features_pad/
+        featuretype: onehot
+        folder: experiments
+        heads_per_future: false
+        latent_dim: 512
+        modelname: cvae_transformer_rc_rcxyz_kl
+        modeltype: cvae
+        nfeats: 14
+        num_actions_to_predict: 20
+        num_epochs: 1000
+        num_input_clips: 4
+        num_intentions: 52
+        num_layers: 4
+        num_nouns: 478
+        num_verbs: 115
+        pair_embedding: false
+        sampling: conseq
+        semantic_dim: 768
+        separate_nouns_verbs: true
+        shared_embedding: true
+        topK: 5
+        use_reconstruction: true
+        weighted_loss: false
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    DATA: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        CHECKPOINT_MODULE_FILE_PATH: ego4d/models/
+        CONFIG_FILE: data/config/config_ICVAE.yaml
+        CROP_SIZE: 224
+        DECODING_BACKEND: pyav
+        ENSEMBLE_METHOD: sum
+        FEATURE_TYPE: onehot
+        FEAT_PREFIX: /Ego4D/features_pad/
+        FOLDER: experiments
+        INPUT_CHANNEL_NUM:
+        - 3
+        INV_UNIFORM_SAMPLE: false
+        MEAN:
+        - 0.45
+        - 0.45
+        - 0.45
+        NUM_FRAMES: 8
+        PATH_PREFIX: data/annotations/
+        PATH_TO_DATA_DIR: ''
+        RANDOM_FLIP: true
+        REVERSE_INPUT_CHANNEL: false
+        SAMPLING_RATE: 8
+        STD:
+        - 0.225
+        - 0.225
+        - 0.225
+        TARGET_FPS: 30
+        TASK: single-label
+        TEST_CROP_SIZE: 256
+        TRAIN_CROP_SIZE: 224
+        TRAIN_JITTER_SCALES:
+        - 256
+        - 320
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    DATA_LOADER: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        ENABLE_MULTI_THREAD_DECODE: false
+        NUM_WORKERS: 8
+        PIN_MEMORY: true
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    DETECTION: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        ALIGNED: true
+        ROI_XFORM_RESOLUTION: 7
+        SPATIAL_SCALE_FACTOR: 16
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    EGO4D: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        MANIFOLD_NOUN_LABELS_PATH: manifold://ondevice_ai_data/tree/datasets/ego4d/noun_label.txt
+        MANIFOLD_VERB_LABELS_PATH: manifold://ondevice_ai_data/tree/datasets/ego4d/verb_label.txt
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    EGO4D_STA: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        ANNOTATION_DIR: ''
+        BGR: false
+        DETECTION_SCORE_THRESH: 0
+        FRAME_KEY_TEMPLATE: '{video_id:s}_{frame_number:07d}'
+        NAO_IOU_THRESH: 0.5
+        OBJ_DETECTIONS: object_detections.json
+        PROPOSAL_APPEND_GT: false
+        RGB_LMDB_DIR: ''
+        TEST_FORCE_FLIP: false
+        TEST_LISTS:
+        - fho_sta_test_unannotated.json
+        TRAIN_LISTS:
+        - fho_sta_train.json
+        TRAIN_PCA_EIGVAL:
+        - 0.225
+        - 0.224
+        - 0.229
+        TRAIN_PCA_EIGVEC:
+        - - -0.5675
+          - 0.7192
+          - 0.4009
+        - - -0.5808
+          - -0.0045
+          - -0.814
+        - - -0.5836
+          - -0.6948
+          - 0.4203
+        TRAIN_PCA_JITTER_ONLY: false
+        TRAIN_USE_COLOR_AUGMENTATION: false
+        VAL_LISTS:
+        - fho_sta_val.json
+        VIDEOS_DIR: ''
+        VIDEO_LOAD_BACKEND: lmdb
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    ENABLE_LOGGING: true
+    EPIC_KITCHEN: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        EPIC_100: false
+        INPUT_CLIP_STRIDE: 10
+        MANIFOLD_TEST_DATA_LIST: manifold://ondevice_ai_data/tree/datasets/epic/mini_test_action_labels.pkl
+        MANIFOLD_TEST_PATH_PREFIX: manifold://fair_vision_data/tree/epic/epic_frames_test
+        MANIFOLD_TRAIN_DATA_LIST: manifold://ondevice_ai_data/tree/datasets/epic/mini_train_action_labels.pkl
+        MANIFOLD_TRAIN_PATH_PREFIX: manifold://fair_vision_data/tree/epic/epic_frames_train
+        NUM_INPUT_CLIPS: 1
+        PATH_PREFIX: ''
+        PREDICT_NOUN: 1
+        PREDICT_VERB: 1
+        RANDOM_STRIDE_RANGE:
+        - 0
+        - 500
+        STRIDE_TYPE: constant
+        TEST_DATA_LIST: EPIC_val_action_labels.pkl
+        TRAIN_DATA_LIST: EPIC_train_action_labels.pkl
+        VAL_DATA_LIST: EPIC_val_action_labels.pkl
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    EPIC_KITCHENS_STA: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        ANNOTATION_DIR: /home/furnari/data/EK55-STA/
+        BGR: false
+        DETECTION_SCORE_THRESH: 0
+        IMG_FNAME_TEMPLATE: frame_{:010d}.jpg
+        IMG_PROC_BACKEND: cv2
+        NAO_IOU_THRESH: 0.5
+        OBJ_DETECTIONS: object_detections.pkl
+        RGB_LMDB_DIR: /home/furnari/SSD/ek55-sta/rgb/
+        TEST_FORCE_FLIP: false
+        TRAIN_LISTS:
+        - training.pkl
+        TRAIN_PCA_EIGVAL:
+        - 0.225
+        - 0.224
+        - 0.229
+        TRAIN_PCA_EIGVEC:
+        - - -0.5675
+          - 0.7192
+          - 0.4009
+        - - -0.5808
+          - -0.0045
+          - -0.814
+        - - -0.5836
+          - -0.6948
+          - 0.4203
+        TRAIN_PCA_JITTER_ONLY: false
+        TRAIN_USE_COLOR_AUGMENTATION: false
+        VAL_LISTS:
+        - validation.pkl
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    FAST_DEV_RUN: false
+    FBLEARNER: false
+    FORECASTING: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        AGGREGATOR: ConcatAggregator
+        DECODER: MultiHeadDecoder
+        NUM_ACTIONS_TO_PREDICT: 20
+        NUM_INPUT_CLIPS: 4
+        NUM_SEQUENCES_TO_PREDICT: 5
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    LOG_GRADIENT_PERIOD: -1
+    LOG_PERIOD: 10
+    MLPMixer: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        action_loss: true
+        augmentation: true
+        beta: 0.9
+        depth: 4
+        double_mixer: true
+        dropout_rate: 0.2
+        expansion_factor: 4
+        expansion_factor_token: 0.5
+        feature_dimension: 2304
+        imbalanced: false
+        noise_injection_factor: 0.01
+        noise_injection_mean: 0.0
+        noise_injection_std: 0.3
+        num_actions_classes:
+        - 115
+        - 478
+        num_features: 14
+        num_intentions: 136
+        position_encoder: false
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    MODEL: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        ARCH: cvae
+        BEAM_WIDTH: 5
+        DROPOUT_RATE: 0.5
+        FC_INIT_STD: 0.01
+        FREEZE_BACKBONE: true
+        HEAD_ACT: softmax
+        HEAD_TTC_ACT: softplus
+        HEAD_VERB_ACT: softmax
+        LOSS_FUNC: cross_entropy
+        LSTM_HIDDEN_DIM: 2048
+        LSTM_NUM_LAYERS: 1
+        MODEL_NAME: ICVAE
+        MULTI_INPUT_FEATURES: 768
+        MULTI_PATHWAY_ARCH:
+        - slowfast
+        NAO_LOSS_FUNC: bce_logit
+        NUM_CLASSES:
+        - 115
+        - 478
+        NUM_NOUNS: 352
+        NUM_VERBS: 125
+        SINGLE_PATHWAY_ARCH:
+        - c2d
+        - i3d
+        - slow
+        STA_LOSS_WEIGHTS:
+        - 1
+        - 1
+        - 1
+        TEACHER_FORCING_RATIO: 0.8
+        TRANSFORMER_DECODER_TGT_MASK: true
+        TRANSFORMER_ENCODER_HEADS: 8
+        TRANSFORMER_ENCODER_LAYERS: 6
+        TRANSFORMER_ENCODER_SRC_MASK: false
+        TRANSFORMER_FROM_PRETRAIN: true
+        TRANSFORMER_INIT_STD: 0.2
+        TRANSFORMER_NOISE_PROB: 0.5
+        TRANSFORMER_NOISE_TYPE: masking
+        TTC_LOSS_FUNC: smooth_l1
+        VERB_LOSS_FUNC: cross_entropy
+        lambdas: !!python/object/new:fvcore.common.config.CfgNode
+          dictitems:
+            cross_entropy: 0.005
+            kl: 1.0e-05
+            l2: 1.0
+          state:
+            __deprecated_keys__: !!set {}
+            __immutable__: false
+            __new_allowed__: false
+            __renamed_keys__: {}
+        losses:
+        - cross_entropy
+        - l2
+        - kl
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    MVIT: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        CLS_EMBED_ON: true
+        DEPTH: 16
+        DIM_MUL: []
+        DROPOUT_RATE: 0.0
+        DROPPATH_RATE: 0.1
+        EMBED_DIM: 96
+        HEAD_MUL: []
+        MLP_RATIO: 4.0
+        MODE: conv
+        NORM: layernorm
+        NORM_STEM: false
+        NUM_HEADS: 1
+        PATCH_2D: false
+        PATCH_KERNEL:
+        - 3
+        - 7
+        - 7
+        PATCH_PADDING:
+        - 1
+        - 3
+        - 3
+        PATCH_STRIDE:
+        - 2
+        - 4
+        - 4
+        POOL_FIRST: false
+        POOL_KVQ_KERNEL: null
+        POOL_KV_STRIDE: []
+        POOL_Q_STRIDE: []
+        QKV_BIAS: true
+        REL_POS_SPATIAL: false
+        REL_POS_TEMPORAL: false
+        SEP_POS_EMBED: false
+        USE_ABS_POS: true
+        ZERO_DECAY_POS_CLS: true
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    MultiHead: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        input_dimension: 2304
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    NONLOCAL: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        GROUP:
+        - - 1
+        - - 1
+        - - 1
+        - - 1
+        INSTANTIATION: dot_product
+        LOCATION:
+        - - []
+        - - []
+        - - []
+        - - []
+        POOL:
+        - - 1
+          - 2
+          - 2
+        - - 1
+          - 2
+          - 2
+        - - 1
+          - 2
+          - 2
+        - - 1
+          - 2
+          - 2
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    NUM_GPUS: 1
+    NUM_SHARDS: 1
+    OUTPUT_DIR: .
+    RESNET: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        DEPTH: 50
+        INPLACE_RELU: true
+        NUM_BLOCK_TEMP_KERNEL:
+        - - 3
+        - - 4
+        - - 6
+        - - 3
+        NUM_GROUPS: 1
+        SPATIAL_DILATIONS:
+        - - 1
+        - - 1
+        - - 1
+        - - 1
+        SPATIAL_STRIDES:
+        - - 1
+        - - 2
+        - - 2
+        - - 2
+        STRIDE_1X1: false
+        TRANS_FUNC: bottleneck_transform
+        WIDTH_PER_GROUP: 64
+        ZERO_INIT_FINAL_BN: true
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    RESULTS_JSON: ''
+    RESULTS_PKL: ''
+    RNG_SEED: 0
+    SLOWFAST: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        ALPHA: 8
+        BETA_INV: 8
+        FUSION_CONV_CHANNEL_RATIO: 2
+        FUSION_KERNEL_SZ: 5
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    SOLVER: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        ACCELERATOR: ddp
+        BASE_LR: 0.0001
+        DAMPENING: 0.0
+        GAMMA: 0.1
+        LRS: []
+        LR_POLICY: cosine_warmup
+        MAX_EPOCH: 150
+        MOMENTUM: 0.9
+        NESTEROV: true
+        OPTIMIZING_METHOD: adam
+        STEPS: []
+        STEP_SIZE: 1
+        WARMUP_EPOCHS: 0.0
+        WARMUP_FACTOR: 0.1
+        WARMUP_START_LR: 0.01
+        WARMUP_STEPS: 1000
+        WEIGHT_DECAY: 0.0001
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    TEST: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        BATCH_SIZE: 32
+        DATASET: Ego4dLongTermAnticipation_Features
+        ENABLE: true
+        EVAL_VAL: false
+        FROM_PREDICTION: false
+        NO_ACT: true
+        NUM_ENSEMBLE_VIEWS: 10
+        NUM_SPATIAL_CROPS: 3
+        ONLY_TESTING: false
+        OUTPUTS_PATH: outputs/
+        SPLIT: val
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+    TRAIN: !!python/object/new:fvcore.common.config.CfgNode
+      dictitems:
+        BATCH_SIZE: 64
+        DATASET: Ego4dLongTermAnticipation_Features
+        ENABLE: true
+      state:
+        __deprecated_keys__: !!set {}
+        __immutable__: false
+        __new_allowed__: false
+        __renamed_keys__: {}
+  state:
+    __deprecated_keys__: !!set {}
+    __immutable__: false
+    __new_allowed__: false
+    __renamed_keys__: {}
