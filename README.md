@@ -1,14 +1,17 @@
-#  Intention-Conditioned Long-Term Human Egocentric Action Forecasting @ EGO4D Challenge 2022
-[Arxiv2022]  [Intention-Conditioned Long-Term Human Egocentric Action Forecasting : @EGO4D LTA Challenge 2022](https://arxiv.org/abs/2207.12080)
+#  Intention-Conditioned Long-Term Human Egocentric Action Forecasting
+[Project page](https://sites.google.com/view/estevevallsmascaro/publications/wacv2023?authuser=0) |
+[Paper](https://openaccess.thecvf.com/content/WACV2023/html/Mascaro_Intention-Conditioned_Long-Term_Human_Egocentric_Action_Anticipation_WACV_2023_paper.html)
 
-This work ranked first in the EGO4D LTA Challenge!
+This work ranked first in both the CVPR@2022 and ECCV@2022 EGO4D LTA Challenge!
 
 
 <img src="/figures/overall_architecture.png" alt="ICVAE" style="zoom:45%;" />
 
 ## 📢 News
-- [14.06.2022] Our ICVAE won [**1st place** in LTA](https://eval.ai/web/challenges/challenge-page/1598/overview)
-- [25.07.2022] We release the first version of the ICVAE codebase.
+- [11.01.2023] The full code is provided
+- [07.01.2023] Our paper was presented in WACV2023
+- [07.10.2022] Our ICVAE won [**1st place** in LTA ECCV@2022](https://ego4d-data.org/workshops/eccv22/)
+- [14.06.2022] Our ICVAE won [**1st place** in LTA CVPR@2022](https://ego4d-data.org/workshops/cvpr22/)
 - [26.07.2022] We release the arXiv paper.
 
 ## 📝 Preparation
@@ -30,9 +33,25 @@ mkdir outputs
 - Modify config.yaml file and paths.py from data directory by adding the path information to this code ([PATH_TO_CODE_BASE]) and to the feature dataset downloaded from Ego4d and padded ([PATH_TO_DATASET])
 - Pre-process the features dataset by using the preprocess_dataset.py script. Adapt the default paths to your enviroment.
 
+## 🏋️‍️ Usage
+Our framework is based on two different modules: 
+- Hierarchical Multitask MLP Mixer (H3M)
+- Intention-Conditioned Variational Autoencoder (I-CVAE)
 
-## 🏋️‍️ Pretraining
-This section is still under development. In the next days we will publish more information on how to test/train the project.
+### Train
+Each of the modules is trained independently. To train each module, you only need to modify the $totrain variable inside the train_model.py
+When a module is trained, a directory with the resulting module, events and results will be saved in the ligthning_logs.
+
+### Evaluate
+Each of the modules can be tested (using the ground-truth verb-noun pairs in the case of I-CVAE) using the test_model.py file. 
+It is important to define (in the same script) the version file that will be used for testing. The code reads the cfg file from that directory and loads the adequate model.
+
+### Test
+Consists on the sequential use of the H3M module to classify the video features to the action classes, and then use this output as input to the ICVAE module. This is the code needed to obtain the results from our challenge.
+Please adapt the versions setted in the file to obtain the best results.
+
+### Configuration
+Configuration to obtain the best results can be found in our paper.
 
 ## 🎓 Citation
 
