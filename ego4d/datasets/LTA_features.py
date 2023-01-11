@@ -156,7 +156,7 @@ class Ego4dRecognition_Features(torch.utils.data.Dataset):
                 Lambda(
                     lambda x: {
                         "vision_features": extract_vision_features(x),
-                        "labels": torch.tensor([x["verb_label"], x["noun_label"]]),
+                        "observed_labels": torch.tensor([x["verb_label"], x["noun_label"]]),
                         "clip_id": str(x["clip_uid"]) + "_" + str(x["action_idx"]),
                     }
                 ),
@@ -252,12 +252,12 @@ class Ego4dLongTermAnticipation_Features(torch.utils.data.Dataset):
 
         ## IMPORTANT: THIS IS TO USE THE DATA FROM PREDICTED, NOT GT
         if self.cfg.TEST.FROM_PREDICTION:
-            previous_predictions = read_json(self.cfg.TEST.OUTPUTS_PATH+ "{}_predictor.json".format(self.cfg.TEST.SPLIT))
-            self.intention_pred = {clip_id: np.array(data["intention_preds"]).argmax() for clip_id, data in previous_predictions.items()}
-            self.verb_pred = {clip_id: np.array(data["verbs_preds"]).argmax(axis=1) for clip_id, data in previous_predictions.items()}
-            self.noun_pred = {clip_id: np.array(data["nouns_preds"]).argmax(axis=1) for clip_id, data in previous_predictions.items()}
+            previous_predictions = read_json(self.cfg.TEST.OUTPUTS_PATH)
+            self.intention_pred = {clip_id: np.array(data) for clip_id, data in previous_predictions["intention_preds"].items()}
+            self.verb_pred = {clip_id: np.array(data) for clip_id, data in previous_predictions["verbs_preds"].items()}
+            self.noun_pred = {clip_id: np.array(data) for clip_id, data in previous_predictions["nouns_preds"].items()}
         else:
-            self.taxonomy = read_json(self.cfg.DATA.PATH_PREFIX+"fho_lta_int_taxonomy.json")
+            self.taxonomy = read_json(self.cfg.DATA.PATH_PREFIX+"fho_lta_int_taxonomy.json") # fho_lta_int_taxonomy_complete if num_intentions > 52 else fho_lta_int_taxonomy
             if self.cfg.DATA.FEATURE_TYPE == "language":
                 self.features = torch.load(self.cfg.DATA.PATH_PREFIX + "taxonomy_clip_embeddings.pt") #"fho_lta_text_embed.pt"
             self.intentions_mapper_dict = intentions_mapper()
@@ -368,31 +368,36 @@ class Ego4dLongTermAnticipation_Features(torch.utils.data.Dataset):
             y =  torch.stack(x["features"], axis=0)
             if self.cfg.MLPMixer.augmentation:
                 if self.split in "train":
-                    y = y[:,torch.randperm(14)[:self.cfg.MLPMixer.num_features], :]
+                    y = y[:,torch.randperm(self.cfg.MLPMixer.num_features)[:self.cfg.MLPMixer.num_features], :]
                 else:
                     y=y[:,-self.cfg.MLPMixer.num_features:, :]
-            return torch.nn.functional.normalize(y, p=2.0, dim=2)
+            return torch.nn.functional.normalize(y[:,-self.cfg.MLPMixer.num_features:, :], p=2.0, dim=2)
 
         def extract_predicted_results(x):
             clip_id = extract_clip_id(x)
             if clip_id not in self.verb_pred:
                 print("Error when obtaining results from {}".format(clip_id))
                 newid = random.choice(list(self.verb_pred.keys()))
-                verbs_noise = torch.tensor(self.verb_pred[newid])
-                nouns_noise = torch.tensor(self.noun_pred[newid])
                 return {
                     "clip_id": clip_id,
                     "observed_labels": torch.stack([torch.tensor(-1), torch.tensor(-1)], dim=-1),
                     "intentions": self.intention_pred[newid],
+                    "forecast_labels": extract_forecast_labels(x)
 
                 }
             else:
                 verbs = torch.tensor(self.verb_pred[clip_id])
                 nouns = torch.tensor(self.noun_pred[clip_id])
+                if clip_id in self.intention_pred:
+                    intent = self.intention_pred[clip_id]
+                else:
+                    print("Error when obtaining intention results from {}".format(clip_id))
+                    intent = np.array(0)
                 return {
                     "clip_id" : clip_id,
                     "observed_labels": torch.stack([verbs, nouns], dim=-1),
-                    "intentions": self.intention_pred[clip_id],
+                    "intentions": intent,
+                    "forecast_labels": extract_forecast_labels(x)
 
                 }
 
@@ -492,4 +497,3 @@ class Ego4dLongTermAnticipation_Features(torch.utils.data.Dataset):
 
     def __len__(self):
         return self.dataset.num_videos
-
