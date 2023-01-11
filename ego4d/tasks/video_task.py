@@ -37,7 +37,7 @@ class VideoTask(LightningModule):
             self.losses_params.pop("l2")
 
 
-        if self.cfg.CVAE.weighted_loss:
+        if self.cfg.CVAE.weighted_loss and self.cfg.TRAIN.ENABLE:
             print("[INFO] Using Imbalanced weighted Focal Loss for crossentropy training")
             samples_per_class = torch.load(self.cfg.DATA.FOLDER + "/samples_per_cls.pt")
             self.loss_fun ={k: losses.get_loss_func(k) for k in  self.cfg.MODEL.losses}
