@@ -88,10 +88,13 @@ def main(cfg):
         checkpoint = torch.load(ckp_path)
         if "state_dict" in checkpoint.keys():
             pre_train_dict = checkpoint["state_dict"]
-            print("#"*25)
-            print(task.load_state_dict(pre_train_dict, strict=False))
-            print(f"Checkpoint {ckp_path} loaded")
-            print("#"*25)
+        else:
+            pre_train_dict = {"model.multitask_head." + k :v for k, v in checkpoint.items()}
+
+        print("#"*25)
+        print(task.load_state_dict(pre_train_dict, strict=False))
+        print(f"Checkpoint {ckp_path} loaded")
+        print("#"*25)
 
     checkpoint_callback = ModelCheckpoint(
         monitor=task.checkpoint_metric, mode="min", save_last=True, save_top_k=1
@@ -127,7 +130,7 @@ def main(cfg):
 if __name__ == "__main__":
     args = parse_args()
     totrain = 'H3M' # Choose between [ICVAE, H3M]
-    finetuning = False
+    finetuning = False # When doing MultiTask_Head place to True
 
 
     cfg_file = DIR_PATH + "/data/config/config_{}.yaml".format(totrain)
@@ -135,7 +138,7 @@ if __name__ == "__main__":
     cfg.TRAIN.ENABLE = True
 
     # If interested in finetuning a model, please add here the path of weights to start.
-    if finetuning:
-        cfg.CHECKPOINT_FILE_PATH = DIR_PATH + "/pretrained_models/multitask_recognition.pt" # used for the action recognition
+    if finetuning and totrain =="H3M":
+        cfg.CHECKPOINT_FILE_PATH = DIR_PATH + "pretrained_weights/multitask_recognition.pt" # used for the action recognition
 
     main(cfg)
