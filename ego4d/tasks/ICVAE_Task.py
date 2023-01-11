@@ -20,6 +20,7 @@ class ICVAE_Task(VideoTask):
         super().__init__(cfg)
         #logger.info(pprint.pformat(cfg))
         self.checkpoint_metric = f"val_0_ED_{cfg.FORECASTING.NUM_ACTIONS_TO_PREDICT-1}"
+        self.impact_loss = {"verbs": cfg.CVAE.loss_impact[0], "nouns": cfg.CVAE.loss_impact[1]}
 
     def forward(self, inputs, tgts):
         return self.model(inputs, tgts=tgts)
@@ -47,16 +48,18 @@ class ICVAE_Task(VideoTask):
         # loss of the epoch
         step_result = {}
         for head_idx, (lab,pred_head) in enumerate(zip(["verbs", "nouns"],preds)): # verbs and nouns
+            if self.impact_loss[lab] ==0:
+                continue
             for seq_idx in range(pred_head.shape[1]): # different time (B, Z, C)
                 # CLASSIFICATION LOSS
                 k = "cross_entropy"
                 if k in losses:
                     if self.cfg.CVAE.weighted_loss:
-                        losses[k] += self.loss_fun[k][lab](
+                        losses[k] += self.impact_loss[lab] * self.loss_fun[k][lab](
                             pred_head[:, seq_idx], forecast_labels[:, seq_idx, head_idx]
                         )
                     else:
-                        losses[k] += self.loss_fun[k](
+                        losses[k] += self.impact_loss[lab] * self.loss_fun[k](
                             pred_head[:, seq_idx], forecast_labels[:, seq_idx, head_idx]
                         )
 
@@ -127,6 +130,7 @@ class ICVAE_Task(VideoTask):
 
         k = self.cfg.FORECASTING.NUM_SEQUENCES_TO_PREDICT
 
+
         # Preds is a list of tensors of shape (B, K, Z), where
         # - B is batch size,
         # - K is number of predictions,
@@ -158,7 +162,7 @@ class ICVAE_Task(VideoTask):
             self.log(key, metric)
 
     def test_step(self, batch, batch_idx):
-        # batch: dict_keys(['forecast_labels', 'observed_labels', 'clip_id', 'forecast_times', 'intentions'])
+        # batch: dict_keys(['forecast_labels', 'observed_labels', 'clip_id', 'intentions'])
         # observed_labels : [B, N, 2, 732]
         # forecast_labels: [B, Z, 2, 732]
         # intentions: [B]
@@ -179,7 +183,7 @@ class ICVAE_Task(VideoTask):
         preds = self.model.generate(intentions = batch["intentions"],
                                     observed_labels=observed_labels, k=k)  # [(B, K, Z)]
 
-        if self.cfg.TEST.FROM_PREDICTION:
+        if self.cfg.TEST.SPLIT == "test":
             return {
                 'last_clip_ids': batch["clip_id"],
                 'verb_preds': preds[0],
@@ -198,7 +202,7 @@ class ICVAE_Task(VideoTask):
         test_outputs = {}
 
         keynotes = {"verb_preds": "verb", "noun_preds": "noun"}
-        if not self.cfg.TEST.FROM_PREDICTION:
+        if not self.cfg.TEST.SPLIT == "test":
             keynotes["forecast_labels"]= "labels"
 
         for key in keynotes.keys():
@@ -240,4 +244,3 @@ class ICVAE_Task(VideoTask):
                     print(results)
 
                 json.dump(step_result, open('outputs/{}_lta_results.json'.format(self.cfg.TEST.SPLIT), 'w'))
-
