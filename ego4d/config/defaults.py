@@ -365,7 +365,7 @@ _C.MVIT.POOL_FIRST = False
 # -----------------------------------------------------------------------------
 _C.TEST.SPLIT = "test"
 _C.TEST.FROM_PREDICTION = False
-_C.TEST.OUTPUTS_PATH = "/home/dhrikarl/PycharmProjects/Forecasting_byIntention/outputs/"
+_C.TEST.OUTPUTS_PATH = "outputs/"
 _C.TEST.ONLY_TESTING = False
 
 
@@ -376,12 +376,12 @@ _C.TEST.ONLY_TESTING = False
 _C.CVAE = CfgNode()
 
 _C.CVAE.activation= "gelu"
-_C.CVAE.annotation_path= "/home/dhrikarl/PycharmProjects/Forecasting_byIntention/data/annotations/"
+_C.CVAE.annotation_path= "data/annotations/"
 _C.CVAE.archiname ="transformer"
 _C.CVAE.config_file= "/data/config/config_ICVAE.yaml"
-_C.CVAE.feature_path= "/media/dhrikarl/Elements/Ego4d-main/FORECASTING_LONGTERM/v1/features_pad/"
+_C.CVAE.feature_path= "/v1/features_pad/"
 _C.CVAE.featuretype= "onehot" #"language"
-_C.CVAE.folder= "/home/dhrikarl/PycharmProjects/Forecasting_byIntention/experiments"
+_C.CVAE.folder= "experiments"
 
 
 _C.CVAE.weighted_loss= False #To use focal loss with Weighted
@@ -408,6 +408,7 @@ _C.CVAE.separate_nouns_verbs = False
 _C.CVAE.use_reconstruction = True
 _C.CVAE.add_noisy_labels = False
 _C.CVAE.use_intention = True
+_C.CVAE.loss_impact= [1, 1]  # verbs and nouns contribution to the loss.
 
 # INTENTION CLASSIFIER
 _C.MLPMixer = CfgNode()
@@ -430,17 +431,15 @@ _C.MLPMixer.augmentation = False
 _C.MLPMixer.position_encoder = False
 _C.MLPMixer.weight_loss_intention = 2
 _C.MLPMixer.weight_loss_action = 1
+_C.MLPMixer.multitask_head = False
+_C.MLPMixer.h3m_used = True
+
 
 
 # ACTION CLASSIFIER
 _C.MultiHead = CfgNode()
 _C.MultiHead.input_dimension = 2304
 
-
-# REFINER MODEL
-_C.REFINER = CfgNode()
-_C.REFINER.latent_dim = 512
-_C.REFINER.num_layers = 2
 
 
 
