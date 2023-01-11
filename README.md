@@ -62,16 +62,16 @@ Configuration files:
 ## 🎓 Citation
 
 If you find our work helps, please cite our paper.
-
-@misc{https://doi.org/10.48550/arxiv.2207.12080,
-  doi = {10.48550/ARXIV.2207.12080},
-  url = {https://arxiv.org/abs/2207.12080},
-  author = {Mascaro, Esteve Valls and Ahn, Hyemin and Lee, Dongheui},
-  title = {Intention-Conditioned Long-Term Human Egocentric Action Forecasting @ EGO4D Challenge 2022},
-  publisher = {arXiv},
-  year = {2022},
-  copyright = {Creative Commons Attribution 4.0 International}
+```bash
+@InProceedings{Mascaro_2023_WACV,
+    author    = {Mascaro, Esteve Valls and Ahn, Hyemin and Lee, Dongheui},
+    title     = {Intention-Conditioned Long-Term Human Egocentric Action Anticipation},
+    booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+    month     = {January},
+    year      = {2023},
+    pages     = {6048-6057}
 }
+```
 
 ## ✉️ Contact
 
