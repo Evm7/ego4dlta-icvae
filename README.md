@@ -1,5 +1,5 @@
 #  Intention-Conditioned Long-Term Human Egocentric Action Forecasting
-[Project page](https://sites.google.com/view/estevevallsmascaro/publications/wacv2023?authuser=0) |
+[Project page](https://evm7.github.io/icvae-page/) |
 [Paper](https://openaccess.thecvf.com/content/WACV2023/html/Mascaro_Intention-Conditioned_Long-Term_Human_Egocentric_Action_Anticipation_WACV_2023_paper.html)
 
 This work ranked first in both the CVPR@2022 and ECCV@2022 EGO4D LTA Challenge!
